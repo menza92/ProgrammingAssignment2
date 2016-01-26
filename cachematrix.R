@@ -18,17 +18,9 @@ makeCacheMatrix <- function(x = matrix()) {
   get <- function() {
     return(x)
   }
-  # Calculate the inverse of "x", and cache it.
-  setInverse <- function() {
-    # Find the dimension of the matrix.
-    xSize <- unique( dim(x) )
-    # If theres more than one unique dim, x is not a square matrix..
-    #.. and therefore not invertible.
-    if( length(xSize) > 1 ) {
-      stop("Non-square matrix can't be inverted.")
-    }
-    # If x * xInverse = <identity_matrix>, "xInverse" is the inverse of "x".
-    xInverse <<- solve( x, diag(xSize) )
+  # Cache the inverse of "x".
+  setInverse <- function(newInverse) {
+    xInverse <<- newInverse
   }
   # Output the cached inverse of "x".
   getInverse <- function() {
@@ -42,6 +34,7 @@ makeCacheMatrix <- function(x = matrix()) {
 ## cacheSolver() -Updates a cached matrix with it's inverted matrix attribute.
 
 cacheSolve <- function(x, ...) {
+  print(x$get())
   # First load whatever inverse "x" might already have.
   xInverse <- x$getInverse()
   # If xInverse is cached, xInverse is returned, exiting the function.
@@ -49,8 +42,20 @@ cacheSolve <- function(x, ...) {
     return(xInverse)
   }
   # If NULL, xInverse is calculated, then reassigned in this function.
-  x$setInverse()
-  xInverse <- x$getInverse()
+  # Find the dimension of the matrix.
+  xSize <- unique( dim( x$get() ) )
+  print("xSize")
+  print(xSize)
+  # If theres more than one unique dim, x is not a square matrix..
+  #.. and therefore not invertible.
+  if( length(xSize) > 1 ) {
+    stop("Non-square matrix can't be inverted.")
+  }
+  # If x * xInverse = <identity_matrix>, "xInverse" is the inverse of "x".
+  print(class( x$get() ))
+  xInverse <- solve( x$get(), diag(xSize) )
+  # Update the inverse of "x" within the "x" object.
+  x$setInverse(xInverse)
 }
 
 
