@@ -52,3 +52,19 @@ cacheSolve <- function(x, ...) {
   x$setInverse()
   xInverse <- x$getInverse()
 }
+
+
+m <- matrix(c(1,0,-1,1),2,2)
+
+
+M <- makeCacheMatrix(m)
+
+print("The matrix M")
+print(M$get())
+
+cacheSolve(M)
+
+print("The inverse of matrix M")
+print(M$getInverse())
+
+
